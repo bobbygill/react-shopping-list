@@ -7,7 +7,7 @@ function DeleteButton(props){
 // const handleClick = () => {
 //    props.onClick(`${props.index}${props.id}`);
 //  }
-
+//
 return (
   <button
     id={props.id}
