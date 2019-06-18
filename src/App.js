@@ -26,10 +26,6 @@ class App extends Component {
 	}
 
 	handleSubmit(e) {
-		// if (this.state.shoppingItem == "") {
-		// 	e.preventDefault();
-		// 	console.log("input cannot be blank");
-		// }
 
 		e.preventDefault();
 		let list2 = [...this.state.list, this.state.shoppingItem];
