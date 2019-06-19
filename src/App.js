@@ -7,9 +7,12 @@ class App extends Component {
     super(props);
 
     this.state = {
-      shoppingItem: "",
+      shoppingItem: { itemName: "", counter: 0 },
       list: []
     };
+
+    // have to start this at 1 so it matches below
+    this.newCounter = 1;
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,33 +22,52 @@ class App extends Component {
 
   handleChange(e) {
     const { name, value, checked, type } = e.target;
+    // console.log("item name is", this.state.shoppingItem.itemName);
+    console.log("handle change counter is", this.state.shoppingItem.counter);
+
+    let newItem = { itemName: e.target.value, counter: this.newCounter };
+
     this.setState({
       //    [name]: type === 'checkbox' ? checked : value
-      [name]: value
+      shoppingItem: newItem
     });
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    let list2 = [...this.state.list, this.state.shoppingItem];
+
+    this.newCounter = this.newCounter + 1;
+    // console.log("new counter is", this.newCounter);
+
+    let newItem = {
+      itemName: this.state.shoppingItem.itemName,
+      counter: this.newCounter
+    };
+    // console.log("new item counter is", newItem.counter);
+
+    let list3 = this.state.list;
+    list3.push(newItem);
 
     this.setState({
-      list: list2
+      list: list3
     });
+
+    let newItem2 = { itemName: "", counter: this.newCounter };
     this.setState({
-      shoppingItem: ""
+      shoppingItem: newItem2
     });
+
+    // console.log(
+    //   "after submit state counter is",
+    //   this.state.shoppingItem.counter + 1
+    // );
   }
 
   handleRemove(e) {
-    // console.log("e.target.value", e.target.value); blank
-    // console.log("e.target.id", e.target.id); apple
-    // console.log(identifier);
-
-    //if you add duplicate items to the list and hit delete, both are removed,
-    // need to try adding item name + index together to create a unique id
-    let newList = this.state.list.filter(x => e.target.id != x);
-    // let newList = this.state.list.filter(x => console.log(this.state.list.indexOf(x).toString()) + console.log(x.id) != identifier);
+    // need to try adding item name + index together to create a unique id - done
+    let newList = this.state.list.filter(
+      x => e.target.id != x.itemName + x.counter.toString()
+    );
     this.setState({ list: newList });
   }
 
@@ -55,7 +77,7 @@ class App extends Component {
         <form className="App" onSubmit={this.handleSubmit}>
           <input
             name="shoppingItem"
-            value={this.state.shoppingItem}
+            value={this.state.shoppingItem.itemName}
             placeholder="Shopping Item"
             onChange={this.handleChange}
           />
@@ -69,10 +91,11 @@ class App extends Component {
             }
             return (
               <div>
-                <li key={item}>{item} </li>
+                <li key={item.itemName}>{item.itemName} </li>
 
                 <DeleteButton
-                  id={item}
+                  id={item.itemName + item.counter.toString()}
+                  key={index}
                   index={index}
                   onClick={this.handleRemove}
                 />
